@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>EcoVoz Colombia</title>
+    <script src="js/config.js" defer></script>
+    <script src="js/mapa.js" defer></script>
+    <script src="js/almacenamiento.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/navegacion.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/chat.js" defer></script>
+    <script src="js/estadistica.js" defer></script>
+    <script src="js/foro.js" defer></script>
+    <script src="js/notificaciones.js" defer></script>
+    <script src="js/sidebar.js" defer></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+
+</head>
+
+<body class="sin-sesion">
+
+    <!-- ==========================
+         INICIO DE SESIÓN
+    =========================== -->
+
+    <div id="acceso" class="acceso">
+        <div class="acceso-caja">
+            <h1>🌱 EcoVoz</h1>
+            <p>Tu voz por el ambiente de Colombia</p>
+
+            <form id="formAcceso" novalidate>
+                <h2 id="accesoTitulo">Ingresa a EcoVoz</h2>
+
+                <label for="accesoCorreo">Correo</label>
+                <input type="email" id="accesoCorreo" autocomplete="email" placeholder="tucorreo@ejemplo.com">
+
+                <div id="grupoAlias" hidden>
+                    <label for="accesoAlias">Alias (lo verán los demás)</label>
+                    <input type="text" id="accesoAlias" maxlength="20" autocomplete="nickname">
+                </div>
+
+                <div id="grupoContrasena" hidden>
+                    <label for="accesoContrasena">Contraseña (mínimo 8 caracteres)</label>
+                    <input type="password" id="accesoContrasena">
+                </div>
+
+                <p id="accesoError" role="alert"></p>
+
+                <button type="submit" id="accesoBoton" class="btn">Continuar con correo</button>
+                <button type="button" id="accesoVolver" class="acceso-enlace" hidden>Usar otro correo</button>
+            </form>
+
+            <p class="acceso-nota">Tu cuenta se guarda solo en este navegador. No uses una contraseña que tengas en otros sitios.</p>
+        </div>
+    </div>
+
+    <!-- ==========================
+         BOTÓN SIDEBAR
+    =========================== -->
+
+    <button
+        id="menuToggle"
+        class="menu-toggle">
+
+        ☰
+
+    </button>
+
+    <!-- ==========================
+         SIDEBAR
+    =========================== -->
+
+    <nav
+        id="sidebar"
+        class="sidebar">
+
+        <div class="sidebar-header">
+
+            <h2>🌱 EcoVoz</h2>
+
+            <p>Colombia</p>
+
+        </div>
+
+       <ul>
+            <li><a href="#inicio" class="nav-link">🏠 Inicio</a></li>
+            <li><a href="#nueva-publicacion" class="nav-link">📝 Nueva Publicación</a></li>
+            <li><a href="#mapa" class="nav-link">🌎 Mapa Ambiental</a></li>
+            <li><a href="#foro" class="nav-link">💬 Foro Ambiental</a></li>
+            <li><a href="#estadisticas" class="nav-link">📊 Estadísticas</a></li>
+            <li><a href="#chat" class="nav-link">🗨️ Chat Comunitario</a></li>
+            <li><a href="#eventos" class="nav-link">📅 Eventos</a></li>
+            <li><a href="#perfil" class="nav-link">👤 Mi Perfil</a></li>
+        </ul>
+
+    </nav>
+
+    <!-- Overlay -->
+
+    <div
+        id="overlay"
+        class="overlay">
+    </div>
+
+    <!-- ==========================
+         HEADER
+    =========================== -->
+
+    <header>
+
+        <h1>
+            🌱 EcoVoz Colombia
+        </h1>
+
+        <nav class="barra-nav" aria-label="Principal">
+            <a href="#inicio"><span aria-hidden="true">🏠</span><small>Inicio</small></a>
+            <a href="#foro"><span aria-hidden="true">💬</span><small>Foro</small></a>
+            <a href="#mapa"><span aria-hidden="true">🌎</span><small>Mapa</small></a>
+            <a href="#nueva-publicacion"><span aria-hidden="true">➕</span><small>Publicar</small></a>
+            <a href="#chat"><span aria-hidden="true">🗨️</span><small>Chat</small></a>
+            <button type="button" id="menuTab" aria-controls="sidebar" aria-expanded="false">
+                <span aria-hidden="true">☰</span><small>Menú</small>
+            </button>
+        </nav>
+
+        <div
+            class="notificaciones">
+
+            <button
+                id="abrirNotificaciones">
+
+                🔔
+
+                <span id="contador">
+                    0
+                </span>
+
+            </button>
+
+            <div
+                id="panelNotificaciones"
+                class="panel-notificaciones">
+
+                <h3>Notificaciones</h3>
+
+                <div
+                    id="listaNotificaciones">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- ==========================
+         HERO
+    =========================== -->
+
+    <section
+        id="inicio"
+        class="hero vista">
+
+        <h2>
+            Unidos por el Medio Ambiente
+        </h2>
+
+        <p>
+
+            Comparte información ambiental,
+            organiza campañas y encuentra
+            soluciones para proteger los
+            ecosistemas de Colombia.
+
+        </p>
+
+        <a href="#nueva-publicacion" class="btn atajo-publicar">
+            📝 ¿Qué quieres reportar hoy?
+        </a>
+
+    </section>
+
+    <!-- ==========================
+         CONTENEDOR
+    =========================== -->
+
+    <div class="container">
+
+        <!-- ======================
+             NUEVA PUBLICACIÓN
+        ======================= -->
+
+        <section
+            id="nueva-publicacion"
+            class="card vista">
+
+            <h2>
+
+                📝 Nueva Publicación
+
+            </h2>
+
+            <input
+                type="text"
+                id="titulo"
+                placeholder="Título">
+
+            <textarea
+                id="descripcion"
+                placeholder="Describe el problema ambiental o propuesta"></textarea>
+
+            <select id="categoria" aria-label="Categoría">
+                <option value="contaminacion">🏭 Contaminación</option>
+                <option value="deforestacion">🪓 Deforestación</option>
+                <option value="agua">💧 Agua</option>
+                <option value="fauna">🐾 Fauna</option>
+                <option value="propuesta">🌱 Propuesta</option>
+                <option value="otro" selected>📌 Otro</option>
+            </select>
+
+            <input
+                type="text"
+                id="ubicacion"
+                placeholder="Ubicación">
+
+            <button
+                class="btn"
+                onclick="obtenerUbicacion()">
+
+                📍 Obtener ubicación
+
+            </button>
+
+            <button type="button" class="btn" onclick="elegirEnMapa()">
+                🗺️ Elegir en el mapa
+            </button>
+
+            <p id="estadoUbicacion" aria-live="polite"></p>
+
+            <input
+                type="file"
+                id="imagen"
+                multiple
+                accept="image/*">
+
+            <!-- Vista previa -->
+
+            <div
+                id="previewImagenes">
+
+            </div>
+
+            <button
+                class="btn"
+                onclick="crearPublicacion()">
+
+                Publicar
+
+            </button>
+
+        </section>
+
+        <!-- ======================
+             MAPA
+        ======================= -->
+
+        <section
+            id="mapa"
+            class="card vista">
+
+            <h2>
+                🌎 Mapa Ambiental
+            </h2>
+
+            <div id="mapaFiltros" class="mapa-filtros"></div>
+
+            <div class="mapa-diseno">
+
+                <div id="mapaMarco" class="mapa-marco">
+
+                    <div id="map"></div>
+
+                    <div class="mapa-buscador">
+                        <div class="mapa-buscador-barra">
+                            <input type="search" id="buscarLugar" aria-label="Buscar lugar"
+                                   placeholder="Buscar en el mapa de Colombia">
+                            <button type="button" id="btnBuscar" aria-label="Buscar">🔍</button>
+                        </div>
+                        <ul id="resultadosBusqueda"></ul>
+                    </div>
+
+                    <div class="mapa-botones">
+                        <button type="button" id="btnMiUbicacion" title="Mi ubicación" aria-label="Mi ubicación">🎯</button>
+                        <button type="button" id="btnVistaPais" title="Ver toda Colombia" aria-label="Ver toda Colombia">🇨🇴</button>
+                        <button type="button" id="btnPantalla" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+                    </div>
+
+                    <div id="mapaAviso" class="mapa-aviso" role="status" hidden></div>
+
+                </div>
+
+                <aside class="mapa-panel">
+                    <h3>Reportes en el mapa</h3>
+                    <ul id="listaReportes"></ul>
+                </aside>
+
+            </div>
+
+        </section>
+
+        <!-- ======================
+             ESTADÍSTICAS
+        ======================= -->
+
+        <section
+            id="estadisticas"
+            class="card vista">
+
+            <h2>
+
+                📊 Estadísticas Ambientales
+
+            </h2>
+
+            <div
+                class="estadisticas">
+
+                <div class="stat">
+
+                    <h3 id="totalPublicaciones">
+                        0
+                    </h3>
+
+                    <p>
+                        Publicaciones
+                    </p>
+
+                </div>
+
+                <div class="stat">
+
+                    <h3 id="totalFirmas">
+                        0
+                    </h3>
+
+                    <p>
+                        Firmas
+                    </p>
+
+                </div>
+
+                <div class="stat">
+
+                    <h3 id="totalComentarios">
+                        0
+                    </h3>
+
+                    <p>
+                        Comentarios
+                    </p>
+
+                </div>
+
+                <div class="stat">
+
+                    <h3 id="totalApoyos">
+                        0
+                    </h3>
+
+                    <p>
+                        Apoyos
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ======================
+             FORO
+        ======================= -->
+
+        <section
+            id="foro"
+            class="card vista">
+
+            <h2>
+
+                💬 Foro Ambiental
+
+            </h2>
+
+            <div
+                id="publicaciones">
+            </div>
+
+        </section>
+
+        <!-- ======================
+             CHAT
+        ======================= -->
+
+        <section
+            id="chat"
+            class="card vista">
+
+            <h2>
+
+                🗨️ Chat Comunitario
+
+            </h2>
+
+            <div
+                id="chatMensajes">
+
+            </div>
+
+            <input
+                type="text"
+                id="chatInput"
+                placeholder="Escribe un mensaje">
+
+            <button
+                class="btn"
+                onclick="enviarMensaje()">
+
+                Enviar
+
+            </button>
+
+        </section>
+
+        <!-- ======================
+             EVENTOS
+        ======================= -->
+
+        <section
+            id="eventos"
+            class="card vista">
+
+            <h2>
+
+                📅 Eventos Ambientales
+
+            </h2>
+
+            <p>
+
+                Próximamente podrás crear,
+                administrar y participar en
+                eventos ecológicos.
+
+            </p>
+
+        </section>
+
+        <!-- ======================
+             PERFIL
+        ======================= -->
+
+        <section
+            id="perfil"
+            class="card vista">
+
+            <h2>
+
+                👤 Mi Perfil
+
+            </h2>
+
+            <p><strong>Alias:</strong> <span id="perfilAlias"></span></p>
+
+            <p><strong>Correo (solo tú lo ves):</strong> <span id="perfilCorreo"></span></p>
+
+            <button type="button" id="btnCerrarSesion" class="btn">
+                Cerrar sesión
+            </button>
+
+        </section>
+
+    </div>
+
+    <!-- ==========================
+         MODAL IMAGEN
+    =========================== -->
+
+    <div
+        id="modalImagen"
+        class="modal-imagen">
+
+        <span
+            class="cerrar-modal"
+            onclick="cerrarModalImagen()">
+
+            &times;
+
+        </span>
+
+        <img
+            id="imagenAmpliada"
+            alt="Imagen ampliada">
+
+    </div>
+
+    <!-- ==========================
+         SCRIPTS
+    =========================== -->
+
+
+</body>
+
+</html>
