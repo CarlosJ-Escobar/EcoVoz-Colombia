@@ -46,6 +46,8 @@ function activarModoCompartido() {
                 lat: f.lat,
                 lng: f.lng,
                 aproximada: f.aproximada,
+                solucion: f.solucion,
+                cerrada: f.cerrado_en ? new Date(f.cerrado_en).toLocaleString() : "",
                 imagenes: f.imagenes,
                 firma: f.perfiles.alias,
                 fecha: new Date(f.creada).toLocaleString(),
@@ -214,6 +216,21 @@ function activarModoCompartido() {
         }
 
         agregarNotificacion("Nuevo comentario agregado");
+        await cargarDatos();
+        return true;
+    };
+
+    // La base de datos solo permite este cambio al autor
+    guardarSolucion = async function (id, solucion) {
+        const { data, error } = await sb.from("publicaciones")
+            .update({ solucion }).eq("id", id).select("id");
+
+        if (error || !data.length) {
+            avisarFallo(error || new Error("Sin permiso para cerrar el caso"));
+            return false;
+        }
+
+        agregarNotificacion("Caso cerrado como resuelto");
         await cargarDatos();
         return true;
     };
