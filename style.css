@@ -1228,3 +1228,43 @@ header h1{
     opacity:.45;
     cursor:default;
 }
+
+/* ===================================
+   CASOS RESUELTOS
+=================================== */
+
+.caso-solucion{
+    margin-top:15px;
+    padding:14px 18px;
+    background:#e6f4ea;
+    border:1px solid #9fcfad;
+    border-radius:14px;
+    overflow-wrap:anywhere;
+}
+
+.caso-solucion strong{ color:#1e6b35; }
+
+.caso-solucion p{ white-space:pre-wrap; }
+
+.cierre-formulario{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:16px 20px;
+    overflow-y:auto;
+}
+
+.cierre-formulario label{ font-weight:600; }
+
+.cierre-formulario textarea{
+    flex-shrink:0;
+    margin:0;
+    font:inherit;
+}
+
+.cierre-formulario small{ color:var(--text-medium); }
+
+.cierre-formulario .btn:disabled{
+    opacity:.45;
+    cursor:default;
+}
