@@ -287,6 +287,8 @@ function renderizarPublicaciones() {
                     ${galeriaHTML}
                 </div>
 
+                ${cierreHTML(pub)}
+
                 <div class="acciones">
 
                     ${tieneCoordenadas(pub) ? `
