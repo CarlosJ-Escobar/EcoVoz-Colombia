@@ -372,6 +372,8 @@ function renderizarPublicaciones() {
     actualizarEstadisticas();
 
     refrescarMarcadores();
+
+    actualizarPanelComentarios();
 }
 
 // =====================================
@@ -436,18 +438,13 @@ function reaccion(index, tipo) {
 // COMENTARIOS
 // =====================================
 
-function agregarComentario(index) {
+function guardarComentario(id, texto) {
 
-    const comentario =
-        prompt(
-            "Ingrese su comentario"
-        );
+    const pub = publicaciones.find(p => p.id === id);
 
-    if (!comentario) return;
+    if (!pub) return false;
 
-    publicaciones[index]
-        .comentarios
-        .push(`${usuarioActual.alias}: ${comentario}`);
+    pub.comentarios.push(`${usuarioActual.alias}: ${texto}`);
 
     guardarDatos();
 
@@ -456,6 +453,8 @@ function agregarComentario(index) {
     );
 
     renderizarPublicaciones();
+
+    return true;
 }
 
 // =====================================
