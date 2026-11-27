@@ -206,16 +206,16 @@ function activarModoCompartido() {
     firmar = index => interactuar(index, "firma", "Nueva firma ciudadana");
     reaccion = (index, tipo) => interactuar(index, tipo);
 
-    agregarComentario = async function (index) {
-        const id = publicaciones[index].id;
-        const texto = prompt("Ingrese su comentario")?.trim();
-        if (!texto) return;
-
+    guardarComentario = async function (id, texto) {
         const { error } = await sb.from("comentarios").insert({ publicacion_id: id, texto });
-        if (error) return avisarFallo(error);
+        if (error) {
+            avisarFallo(error);
+            return false;
+        }
 
         agregarNotificacion("Nuevo comentario agregado");
         await cargarDatos();
+        return true;
     };
 
     enviarMensaje = async function () {
