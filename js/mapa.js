@@ -308,7 +308,7 @@ function crearPopupPublicacion(pub) {
     contenido.innerHTML = `
         ${foto ? `<img src="${escaparHTML(foto)}" alt="">` : ""}
         <strong>${escaparHTML(pub.titulo)}</strong>
-        <small>${categoria.icono} ${categoria.nombre}${pub.aproximada ? " · ubicación aproximada" : ""}</small>
+        <small>${pub.solucion ? "✅ Resuelto · " : ""}${categoria.icono} ${categoria.nombre}${pub.aproximada ? " · ubicación aproximada" : ""}</small>
         <p>${escaparHTML(pub.ubicacion)}</p>
         <div class="popup-acciones">
             <button type="button">💬 Ver publicación</button>
@@ -341,7 +341,12 @@ function refrescarMarcadores() {
 
         const marcador = L.marker(
             [pub.lat, pub.lng],
-            { icon: crearIcono(categoria.color, categoria.icono), title: pub.titulo }
+            {
+                icon: pub.solucion
+                    ? crearIcono("#188038", "✅")
+                    : crearIcono(categoria.color, categoria.icono),
+                title: pub.titulo
+            }
         )
             .bindPopup(crearPopupPublicacion(pub))
             .addTo(capaReportes);
@@ -352,7 +357,7 @@ function refrescarMarcadores() {
         const boton = document.createElement("button");
         boton.type = "button";
         boton.innerHTML = `
-            <strong>${categoria.icono} ${escaparHTML(pub.titulo)}</strong>
+            <strong>${pub.solucion ? "✅" : categoria.icono} ${escaparHTML(pub.titulo)}</strong>
             <span>${escaparHTML(pub.ubicacion)}</span>`;
         boton.addEventListener("click", () => enfocarPublicacion(pub.id));
         item.appendChild(boton);
